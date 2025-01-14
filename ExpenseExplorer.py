@@ -2,6 +2,7 @@ import sys
 
 import pandas as pd
 import openpyxl
+import os
 
 from openpyxl import Workbook
 
@@ -50,7 +51,11 @@ class MainWindow(QMainWindow):
         self.SDay = self.Home.leSDay.text()
         self.EDay = self.Home.leEDay.text()
 
-        self.wb = openpyxl.load_workbook(r"C:\Users\Programmer\Documents\Python UI Projects\Expense Explorer\ExpenseWorkbook.xlsx")
+        curDir = os.path.dirname(os.path.abspath(__file__))
+        FileName = "ExpenseWorkbook.xlsx"
+        self.FilePath = os.path.join(curDir, FileName)
+
+        self.wb = openpyxl.load_workbook(self.FilePath)
         self.ws = self.wb["Expense Tracker"]
 
         self.Home.leSDay.mousePressEvent = lambda event, le = self.Home.leSDay: self.addDate(event, le)
@@ -196,7 +201,7 @@ class MainWindow(QMainWindow):
                 self.ws[f'C{row}'].value = self.AddUI.leIPrice.text()
                 self.ws[f'D{row}'].value = self.AddUI.comboCat.currentText()
 
-                self.wb.save(r"C:\Users\Programmer\Documents\Python UI Projects\Expense Explorer\ExpenseWorkbook.xlsx")
+                self.wb.save(self.FilePath)
                 QMessageBox.information(self.AddFrm, "Expense Added", f"Item {self.AddUI.leISpend.text()} is now added")
                 self.AddUI.leISpend.clear()
                 self.AddUI.leIPrice.clear()
